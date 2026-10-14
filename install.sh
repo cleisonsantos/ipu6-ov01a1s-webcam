@@ -175,7 +175,7 @@ d /run/camera 0777 root root -
 EOF
 
 cat > /etc/modprobe.d/ipu6-webcam.conf <<'EOF'
-options v4l2loopback devices=1 video_nr=90 card_label="IPU6 ISP Camera" exclusive_caps=1
+options v4l2loopback devices=1 video_nr=90 card_label="IPU6 ISP Camera" exclusive_caps=0
 EOF
 cat > /etc/modules-load.d/ipu6-webcam.conf <<'EOF'
 v4l2loopback

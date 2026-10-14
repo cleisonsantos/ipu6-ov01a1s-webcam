@@ -113,6 +113,16 @@ readlink /sys/bus/i2c/devices/i2c-OVTI01AF:00/driver   # -> .../drivers/ov01a1s
 media-ctl -p -d /dev/media0 | grep -A4 ov01a1s
 ```
 
+**Camera works in OBS/Chrome but not in GNOME Snapshot** — GNOME uses
+PipeWire/WirePlumber, which only exposes V4L2 devices that advertise capture
+capability at boot. Make sure the loopback uses `exclusive_caps=0` (see
+`/etc/modprobe.d/ipu6-webcam.conf`) and reboot. If it still doesn't show up,
+restart WirePlumber after the pipeline is running:
+
+```bash
+systemctl --user restart wireplumber
+```
+
 **Image upside down** — use `FLIP=no`/`FLIP=yes` depending on your panel
 rotation.
 
