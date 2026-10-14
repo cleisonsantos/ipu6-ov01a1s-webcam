@@ -48,7 +48,7 @@ export DEBIAN_FRONTEND=noninteractive
 apt-get update
 apt-get install -y \
     build-essential cmake pkg-config autoconf automake libtool git xz-utils \
-    dkms kmod v4l-utils \
+    dkms kmod v4l-utils mokutil \
     libexpat1-dev libdrm-dev libva-dev \
     libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev \
     libgudev-1.0-dev libjson-c-dev uuid-dev libx11-dev \
@@ -147,8 +147,9 @@ fi
 (
     cd "${ICAM}"
     export CHROME_SLIM_CAMHAL=ON
+    MULTIARCH="$(dpkg-architecture -qDEB_HOST_MULTIARCH 2>/dev/null || echo x86_64-linux-gnu)"
     ./autogen.sh
-    ./configure --prefix=/usr --enable-gstdrmformat=yes
+    ./configure --prefix=/usr --libdir="/usr/lib/${MULTIARCH}" --enable-gstdrmformat=yes
     make -j"$(nproc)"
     make install
 )
@@ -185,6 +186,12 @@ log "8/8 Instalando o comando ipu6-webcam-start"
 install -m 0755 "${REPO_DIR}/tools/start_ipu6_isp_webcam.sh" /usr/local/bin/ipu6-webcam-start
 install -d /usr/lib/systemd/user
 install -m 0644 "${REPO_DIR}/systemd/ipu6-webcam.service" /usr/lib/systemd/user/ipu6-webcam.service
+
+if command -v mokutil >/dev/null 2>&1 && mokutil --sb-state 2>/dev/null | grep -qi enabled; then
+    warn "Secure Boot esta LIGADO. Os modulos DKMS locais precisam estar"
+    warn "assinados com uma MOK inscrita, senao o kernel vai rejeita-los."
+    warn "Rode: sudo bash ${REPO_DIR}/tools/setup_secureboot_mok.sh"
+fi
 
 cat <<'EOF'
 

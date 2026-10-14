@@ -1,6 +1,8 @@
 [Unit]
 Description=IPU6 OV01A1S webcam -> v4l2loopback (/dev/video90)
 After=graphical-session.target
+StartLimitIntervalSec=60
+StartLimitBurst=5
 
 [Service]
 Type=simple
