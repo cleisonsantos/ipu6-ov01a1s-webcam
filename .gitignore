@@ -1,0 +1,19 @@
+# Build artifacts
+build/
+*.o
+*.ko
+*.mod
+*.mod.c
+.tmp_versions/
+
+# Local/system data (not redistributable or machine-specific)
+windows-driverstore/
+diagnostics/
+ipu6-hal-config/
+*.output.txt
+v4l2_inventory.output.txt
+
+# Tooling leftovers
+.agents/
+.codex
+*.log

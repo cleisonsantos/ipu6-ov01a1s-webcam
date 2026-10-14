@@ -1,0 +1,18 @@
+diff --git a/drivers/media/i2c/ov01a1s.c b/drivers/media/i2c/ov01a1s.c
+--- a/drivers/media/i2c/ov01a1s.c
++++ b/drivers/media/i2c/ov01a1s.c
+@@
+ static const struct acpi_device_id ov01a1s_acpi_ids[] = {
+ 	{ "OVTI01AS" },
++	{ "OVTI01AF" },
+ 	{}
+ };
+ 
+diff --git a/drivers/media/pci/intel/ipu-bridge.c b/drivers/media/pci/intel/ipu-bridge.c
+--- a/drivers/media/pci/intel/ipu-bridge.c
++++ b/drivers/media/pci/intel/ipu-bridge.c
+@@
+ 	IPU_SENSOR_CONFIG("OVTI01A0", 1, 400000000),
+ 	IPU_SENSOR_CONFIG("OVTI01AS", 1, 400000000),
++	IPU_SENSOR_CONFIG("OVTI01AF", 1, 400000000),
+ 	IPU_SENSOR_CONFIG("OVTI02C1", 1, 400000000),

@@ -1,0 +1,13 @@
+[Unit]
+Description=IPU6 OV01A1S webcam -> v4l2loopback (/dev/video90)
+After=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/ipu6-webcam-start
+Restart=on-failure
+RestartSec=3
+Environment=PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+
+[Install]
+WantedBy=default.target
