@@ -9,6 +9,10 @@ set -euo pipefail
 
 export PATH="/usr/sbin:/sbin:$PATH"
 
+# O parser do HAL usa strtof com separador decimal '.'; em locales como pt_BR
+# (virgula) as faixas de AE falham ("Malformed ET range").
+export LC_ALL=C
+
 PLUGIN_DIR="${PLUGIN_DIR:-}"
 CFG_DIR="${CFG_DIR:-}"
 DEVICE="${DEVICE:-ov01a1s-uf}"
