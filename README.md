@@ -116,12 +116,7 @@ media-ctl -p -d /dev/media0 | grep -A4 ov01a1s
 **Camera works in OBS/Chrome but not in GNOME Snapshot** — GNOME uses
 PipeWire/WirePlumber. There are three known issues:
 
-1. The loopback must use `exclusive_caps=0` (see
-   `/etc/modprobe.d/ipu6-webcam.conf`), otherwise udev marks it
-   `:video_output:` only and WirePlumber ignores it.
-2. The raw IPU6 nodes (`ipu6 (V4L2)`) should be hidden from the camera list:
-   `sudo bash tools/fix_gnome_snapshot.sh`.
-3. **PipeWire's SPA v4l2 plugin has a hard limit of 64 V4L2 devices**
+1. **PipeWire's SPA v4l2 plugin has a hard limit of 64 V4L2 devices**
    (`MAX_DEVICES` in `spa/plugins/v4l2/v4l2-udev.c`). The IPU6 driver creates
    64 `Intel IPU6 ISYS Capture` nodes, so `/dev/video90` is silently dropped
    and never appears in GNOME. Rebuild that plugin with a higher limit:
@@ -133,12 +128,22 @@ PipeWire/WirePlumber. There are three known issues:
    The script compiles the plugin from the same PipeWire version and loads it
    through `SPA_PLUGIN_DIR` (user-level drop-ins), without touching system
    files.
+2. The raw IPU6 nodes (`ipu6 (V4L2)`) should be hidden from the camera list:
+   `sudo bash tools/fix_gnome_snapshot.sh`.
+3. **Chrome/WebRTC requires `exclusive_caps=1`** on the v4l2loopback;
+   otherwise Chrome does not list the camera. The same script sets
+   `exclusive_caps=1` and adds a udev rule forcing `:video_capture:` on the
+   loopback, so the PipeWire portal keeps seeing it.
 
 After that, restart WirePlumber if needed:
 
 ```bash
 systemctl --user restart wireplumber
 ```
+
+**Camera works in GNOME but not in Chrome** — run
+`sudo bash tools/fix_chrome_compat.sh` (sets `exclusive_caps=1`, adds the udev
+rule and reloads the loopback).
 
 **Image upside down** — use `FLIP=no`/`FLIP=yes` depending on your panel
 rotation.

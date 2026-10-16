@@ -62,10 +62,10 @@ if [[ ! -e "${OUTPUT}" ]]; then
             devices=1 \
             video_nr="${OUTPUT#/dev/video}" \
             card_label="IPU6 ISP Camera" \
-            exclusive_caps=0 2>/dev/null; then
+            exclusive_caps=1 2>/dev/null; then
         echo "Erro: ${OUTPUT} nao existe e nao foi possivel carregar o v4l2loopback sem senha." >&2
         echo "Rode manualmente e tente de novo:" >&2
-        echo "  sudo modprobe v4l2loopback devices=1 video_nr=${OUTPUT#/dev/video} card_label=\"IPU6 ISP Camera\" exclusive_caps=0" >&2
+        echo "  sudo modprobe v4l2loopback devices=1 video_nr=${OUTPUT#/dev/video} card_label=\"IPU6 ISP Camera\" exclusive_caps=1" >&2
         exit 1
     fi
 fi
