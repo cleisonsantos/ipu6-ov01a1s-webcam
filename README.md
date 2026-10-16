@@ -145,6 +145,11 @@ systemctl --user restart wireplumber
 `sudo bash tools/fix_chrome_compat.sh` (sets `exclusive_caps=1`, adds the udev
 rule and reloads the loopback).
 
+> **Note:** Chrome/WebRTC (and apps that read V4L2 directly, like OBS) is the
+> primary supported path. GNOME Snapshot support is best-effort: PipeWire's
+> V4L2 camera enumeration is fragile with the IPU6 driver, which creates 64
+> video nodes. If GNOME works for you, great; if not, use the browser.
+
 **Image upside down** — use `FLIP=no`/`FLIP=yes` depending on your panel
 rotation.
 
