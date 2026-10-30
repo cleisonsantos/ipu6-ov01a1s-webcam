@@ -190,8 +190,19 @@ EOF
 # ---------------------------------------------------------------------------
 log "8/8 Instalando o comando ipu6-webcam-start"
 install -m 0755 "${REPO_DIR}/tools/start_ipu6_isp_webcam.sh" /usr/local/bin/ipu6-webcam-start
+install -m 0755 "${REPO_DIR}/tools/ipu6-webcam-suspend.py" /usr/local/bin/ipu6-webcam-suspend
 install -d /usr/lib/systemd/user
 install -m 0644 "${REPO_DIR}/systemd/ipu6-webcam.service" /usr/lib/systemd/user/ipu6-webcam.service
+install -m 0644 "${REPO_DIR}/systemd/ipu6-webcam-suspend.service" /usr/lib/systemd/user/ipu6-webcam-suspend.service
+
+if [[ -n "${SUDO_USER:-}" ]]; then
+    UID_NUM="$(id -u "${SUDO_USER}")"
+    sudo -u "${SUDO_USER}" \
+        XDG_RUNTIME_DIR="/run/user/${UID_NUM}" \
+        DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/${UID_NUM}/bus" \
+        systemctl --user enable --now ipu6-webcam-suspend 2>/dev/null || \
+        warn "habilite o listener manualmente: systemctl --user enable --now ipu6-webcam-suspend"
+fi
 
 if command -v mokutil >/dev/null 2>&1 && mokutil --sb-state 2>/dev/null | grep -qi enabled; then
     warn "Secure Boot esta LIGADO. Os modulos DKMS locais precisam estar"
@@ -219,5 +230,8 @@ Opcoes:
 
 Para iniciar automaticamente (opcional):
     systemctl --user enable --now ipu6-webcam
+
+Para pausar a camera no suspend (o driver IPU6 recusa suspend com stream aberto):
+    systemctl --user enable --now ipu6-webcam-suspend
 ======================================================================
 EOF

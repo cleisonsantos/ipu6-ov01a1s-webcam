@@ -68,6 +68,31 @@ To start automatically with the session:
 systemctl --user enable --now ipu6-webcam
 ```
 
+## Suspend
+
+The IPU6 driver refuses to suspend while a stream is open
+(`isys_suspend()` returns `-EBUSY` for any open stream), and the camera
+service keeps one open all the time. Without a fix, closing the lid leaves the
+laptop awake.
+
+The installer enables `ipu6-webcam-suspend`, a user service that listens to
+logind's `PrepareForSleep` signal: it holds a delay inhibitor, stops the camera
+before sleep and restarts it ~2 s after resume (only if it was running).
+
+```bash
+systemctl --user status ipu6-webcam-suspend
+journalctl --user -u ipu6-webcam-suspend -b   # ver sleep/resume
+cat /sys/power/suspend_stats/success           # deve incrementar
+```
+
+If you prefer to keep the camera off except during calls instead of the suspend
+listener:
+
+```bash
+systemctl --user disable --now ipu6-webcam
+systemctl --user start ipu6-webcam   # quando for usar
+```
+
 ## Repository layout
 
 ```text

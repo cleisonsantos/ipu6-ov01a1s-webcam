@@ -1,0 +1,13 @@
+[Unit]
+Description=Pausa a camera IPU6 antes do suspend (evita -EBUSY no driver)
+Documentation=https://github.com/cleisonsantos/ipu6-ov01a1s-webcam
+After=ipu6-webcam.service
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/ipu6-webcam-suspend
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=default.target
